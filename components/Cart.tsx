@@ -43,7 +43,7 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, items, onUpdateQuantity, o
             <ShoppingCartIcon className="h-16 w-16 text-gray-300" />
             <p className="mt-4 text-xl font-semibold text-gray-700">Your cart is empty</p>
             <p className="mt-1 text-gray-500">Looks like you haven't added anything yet.</p>
-            <button onClick={onClose} className="mt-6 px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition-colors">
+            <button onClick={onClose} className="mt-6 px-6 py-2 bg-teal-600 text-white font-semibold rounded-lg shadow-md hover:bg-teal-700 transition-colors">
               Continue Shopping
             </button>
           </div>
@@ -89,7 +89,7 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, items, onUpdateQuantity, o
             </div>
             <p className="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
             <div className="mt-6">
-              <a href="#" className="flex items-center justify-center rounded-md border border-transparent bg-blue-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-blue-700">
+              <a href="#" className="flex items-center justify-center rounded-md border border-transparent bg-teal-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-teal-700">
                 Proceed to Checkout
               </a>
             </div>

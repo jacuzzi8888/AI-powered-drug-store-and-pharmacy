@@ -22,13 +22,13 @@ const NavLink: React.FC<{
       ${isMobile ? 'block w-full text-left px-4 py-3 text-base' : 'px-3 py-2 text-sm font-medium relative'}
       rounded-md transition-colors duration-200 
       ${currentView === view
-        ? 'text-blue-600'
-        : 'text-gray-700 hover:text-blue-600'}
+        ? 'text-teal-600'
+        : 'text-gray-700 hover:text-teal-600'}
     `}
   >
     {children}
      {currentView === view && !isMobile && (
-        <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1/2 h-0.5 bg-blue-600 rounded-full"></span>
+        <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1/2 h-0.5 bg-teal-600 rounded-full"></span>
     )}
   </button>
 );
@@ -48,13 +48,13 @@ const Header: React.FC<HeaderProps> = ({ currentView, setView, cartItemCount, on
   ];
 
   return (
-    <header className="bg-white/80 backdrop-blur-lg shadow-sm sticky top-0 z-40 border-b border-gray-200">
+    <header className="bg-white/80 backdrop-blur-lg shadow-sm sticky top-0 z-40 border-b border-slate-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo and Home link */}
           <div className="flex-shrink-0">
             <button onClick={() => setView('dashboard')} className="flex items-center">
-              <MedkitIcon className="h-8 w-8 text-blue-600" />
+              <MedkitIcon className="h-8 w-8 text-teal-600" />
               <span className="ml-3 text-xl font-bold text-gray-800 tracking-tight">Digital Rx</span>
             </button>
           </div>
@@ -70,7 +70,7 @@ const Header: React.FC<HeaderProps> = ({ currentView, setView, cartItemCount, on
           
           <div className="flex items-center space-x-4">
             {/* Cart Icon */}
-            <button onClick={onCartClick} className="relative text-gray-500 hover:text-blue-600 transition-colors" aria-label="Open cart">
+            <button onClick={onCartClick} className="relative text-gray-500 hover:text-teal-600 transition-colors" aria-label="Open cart">
                 <ShoppingCartIcon className="h-6 w-6"/>
                 {cartItemCount > 0 && (
                     <span className="absolute -top-2 -right-2 flex items-center justify-center h-5 w-5 bg-red-500 text-white text-xs font-bold rounded-full">
@@ -88,7 +88,7 @@ const Header: React.FC<HeaderProps> = ({ currentView, setView, cartItemCount, on
             <div className="md:hidden">
               <button
                 onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}
-                className="inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+                className="inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-teal-500"
                 aria-controls="mobile-menu"
                 aria-expanded={isMobileMenuOpen}
               >

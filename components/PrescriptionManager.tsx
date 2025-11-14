@@ -8,11 +8,11 @@ interface PrescriptionManagerProps {
   onUpload: (file: File) => void;
 }
 
-const statusStyles: Record<PrescriptionStatus, { icon: React.ElementType, badge: string, text: string }> = {
-  [PrescriptionStatus.Approved]: { icon: CheckCircleIcon, badge: 'bg-green-100 text-green-800', text: 'text-green-600' },
-  [PrescriptionStatus.Pending]: { icon: ClockIcon, badge: 'bg-yellow-100 text-yellow-800', text: 'text-yellow-600' },
-  [PrescriptionStatus.Rejected]: { icon: XCircleIcon, badge: 'bg-red-100 text-red-800', text: 'text-red-600' },
-  [PrescriptionStatus.NeedsClarification]: { icon: InformationCircleIcon, badge: 'bg-blue-100 text-blue-800', text: 'text-blue-600' },
+const statusStyles: Record<PrescriptionStatus, { icon: React.ElementType, badge: string, text: string, description: string }> = {
+  [PrescriptionStatus.Approved]: { icon: CheckCircleIcon, badge: 'bg-green-100 text-green-800', text: 'text-green-600', description: "Your prescription has been approved and is ready to be filled." },
+  [PrescriptionStatus.Pending]: { icon: ClockIcon, badge: 'bg-amber-100 text-amber-800', text: 'text-amber-600', description: "Your prescription has been submitted and is awaiting review." },
+  [PrescriptionStatus.Rejected]: { icon: XCircleIcon, badge: 'bg-red-100 text-red-800', text: 'text-red-600', description: "Your prescription was rejected. Please contact the pharmacy for details." },
+  [PrescriptionStatus.NeedsClarification]: { icon: InformationCircleIcon, badge: 'bg-sky-100 text-sky-800', text: 'text-sky-600', description: "The pharmacist requires more information. We will be in touch." },
 };
 
 const UploadModal: React.FC<{ onClose: () => void; onUpload: (file: File) => void; }> = ({ onClose, onUpload }) => {
@@ -72,12 +72,12 @@ const UploadModal: React.FC<{ onClose: () => void; onUpload: (file: File) => voi
           onDragLeave={handleDragLeave}
           onDragOver={handleDragOver}
           onDrop={handleDrop}
-          className={`border-2 border-dashed rounded-lg p-10 text-center transition-colors ${isDragging ? 'border-blue-500 bg-blue-50' : 'border-gray-300'}`}
+          className={`border-2 border-dashed rounded-lg p-10 text-center transition-colors ${isDragging ? 'border-teal-500 bg-teal-50' : 'border-gray-300'}`}
         >
           <UploadIcon className="mx-auto h-12 w-12 text-gray-400" />
           <p className="mt-2 text-sm text-gray-600">Drag & drop your file here</p>
           <p className="text-xs text-gray-500">or</p>
-          <label htmlFor="file-upload" className="cursor-pointer font-medium text-blue-600 hover:text-blue-500">
+          <label htmlFor="file-upload" className="cursor-pointer font-medium text-teal-600 hover:text-teal-500">
             browse to upload
           </label>
           <input id="file-upload" name="file-upload" type="file" className="sr-only" accept="image/*,.pdf" onChange={(e) => handleFileChange(e.target.files ? e.target.files[0] : null)} />
@@ -95,7 +95,7 @@ const UploadModal: React.FC<{ onClose: () => void; onUpload: (file: File) => voi
       </div>
       <div className="bg-gray-50 px-6 py-4 flex justify-end space-x-3">
         <button onClick={onClose} type="button" className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50">Cancel</button>
-        <button onClick={handleSubmit} type="button" disabled={!file} className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 disabled:bg-gray-300">Submit for Verification</button>
+        <button onClick={handleSubmit} type="button" disabled={!file} className="px-4 py-2 text-sm font-medium text-white bg-teal-600 border border-transparent rounded-md shadow-sm hover:bg-teal-700 disabled:bg-gray-300">Submit for Verification</button>
       </div>
     </Modal>
   );
@@ -159,12 +159,15 @@ const PrescriptionCard: React.FC<{ prescription: Prescription, onSelect: (p: Pre
                         Submitted: {prescription.submittedAt.toLocaleDateString()}
                     </p>
                 </div>
-                <button onClick={() => onSelect(prescription)} className="ml-4 text-blue-600 hover:text-blue-900 text-sm font-medium flex items-center">
+                <button onClick={() => onSelect(prescription)} className="ml-4 text-teal-600 hover:text-teal-900 text-sm font-medium flex items-center">
                     <EyeIcon className="h-4 w-4 mr-1" /> View
                 </button>
             </div>
             <div className="mt-4 pt-4 border-t border-gray-200 flex justify-between items-center">
-                <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${badgeColor}`}>
+                <span 
+                    title={statusStyles[prescription.status].description}
+                    className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${badgeColor}`}
+                >
                     <Icon className="h-4 w-4 mr-1.5" />
                     {prescription.status}
                 </span>
@@ -197,7 +200,10 @@ const PrescriptionRow: React.FC<{ prescription: Prescription, onSelect: (p: Pres
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{prescription.submittedAt.toLocaleDateString()}</td>
       <td className="px-6 py-4 whitespace-nowrap text-sm">
-        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${badgeColor}`}>
+        <span 
+            title={statusStyles[prescription.status].description}
+            className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${badgeColor}`}
+        >
           <Icon className="h-4 w-4 mr-1.5" />
           {prescription.status}
         </span>
@@ -212,7 +218,7 @@ const PrescriptionRow: React.FC<{ prescription: Prescription, onSelect: (p: Pres
                     <ArrowPathIcon className="h-4 w-4 mr-1"/> Refill
                 </button>
             )}
-            <button onClick={() => onSelect(prescription)} className="text-blue-600 hover:text-blue-900 flex items-center text-sm">
+            <button onClick={() => onSelect(prescription)} className="text-teal-600 hover:text-teal-900 flex items-center text-sm">
                 <EyeIcon className="h-4 w-4 mr-1" /> View
             </button>
         </div>
@@ -229,6 +235,28 @@ const PrescriptionManager: React.FC<PrescriptionManagerProps> = ({ prescriptions
     return [...prescriptions].sort((a, b) => b.submittedAt.getTime() - a.submittedAt.getTime());
   }, [prescriptions]);
 
+  const StatusLegend = () => (
+    <div className="bg-slate-100 p-4 rounded-lg border border-slate-200 mb-6 md:mb-8">
+        <h3 className="text-base font-semibold text-gray-700 mb-3 flex items-center">
+            <InformationCircleIcon className="h-5 w-5 mr-2 text-gray-400" />
+            Status Legend
+        </h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3">
+            {Object.values(statusStyles).map((style, index) => (
+                <div key={index} className="flex items-start">
+                    <div className="flex-shrink-0 mt-0.5">
+                         <span className={`px-2 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full ${style.badge}`}>
+                            <style.icon className="h-4 w-4 mr-1.5" />
+                            {Object.keys(statusStyles)[index]}
+                        </span>
+                    </div>
+                    <p className="ml-3 text-sm text-gray-600">{style.description}</p>
+                </div>
+            ))}
+        </div>
+    </div>
+  );
+
   return (
     <div className="p-4 md:p-8 max-w-7xl mx-auto">
       {isUploadModalOpen && <UploadModal onClose={() => setUploadModalOpen(false)} onUpload={onUpload} />}
@@ -236,17 +264,19 @@ const PrescriptionManager: React.FC<PrescriptionManagerProps> = ({ prescriptions
 
       <header className="flex flex-col sm:flex-row justify-between sm:items-center mb-6 md:mb-8">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-900">My Prescriptions</h1>
-          <p className="mt-1 text-sm md:text-base text-gray-600">Manage and track your prescription submissions.</p>
+          <h1 className="text-3xl font-bold text-gray-900">My Prescriptions</h1>
+          <p className="mt-1 text-base text-gray-600">Manage and track your prescription submissions.</p>
         </div>
         <button
           onClick={() => setUploadModalOpen(true)}
-          className="mt-4 sm:mt-0 w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700"
+          className="mt-4 sm:mt-0 w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-teal-600 hover:bg-teal-700"
         >
           <UploadIcon className="-ml-1 mr-2 h-5 w-5" />
           Upload New Prescription
         </button>
       </header>
+
+      <StatusLegend />
       
       {/* Mobile Card View */}
       <div className="md:hidden">

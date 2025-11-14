@@ -59,7 +59,7 @@ const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product, onClos
             </button>
 
             <div className="flex-grow">
-                <span className="text-sm font-semibold text-blue-600 uppercase tracking-wide">{product.category}</span>
+                <span className="text-sm font-semibold text-teal-600 uppercase tracking-wide">{product.category}</span>
                 <h2 className="text-3xl font-bold text-gray-900 mt-2">{product.name}</h2>
                 <div className="my-4">
                     <StarRating rating={product.rating} reviewCount={product.reviewCount} />
@@ -75,7 +75,7 @@ const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product, onClos
                     className={`w-full px-6 py-3 font-semibold rounded-md transition-all duration-300 flex items-center justify-center ${
                     added
                         ? 'bg-green-500 text-white'
-                        : 'bg-blue-600 text-white hover:bg-blue-700'
+                        : 'bg-teal-600 text-white hover:bg-teal-700'
                     }`}
                 >
                     <ShoppingCartIcon className="h-5 w-5 mr-2" />
