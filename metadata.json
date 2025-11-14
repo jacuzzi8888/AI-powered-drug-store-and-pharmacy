@@ -1,0 +1,5 @@
+{
+  "name": "Digital Pharmacy Platform",
+  "description": "A comprehensive digital pharmacy platform that allows users to manage prescriptions, consult with an AI assistant, and browse products, all with a focus on security and clinical safety.",
+  "requestFramePermissions": []
+}
