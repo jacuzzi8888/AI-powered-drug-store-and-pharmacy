@@ -29,8 +29,22 @@ export interface Product {
   category: string;
   rating: number;
   reviewCount: number;
+  stock: number;
 }
 
 export interface CartItem extends Product {
   quantity: number;
+}
+
+export interface Order {
+  id: string;
+  date: Date;
+  items: CartItem[];
+  total: number;
+}
+
+export interface User {
+  email: string;
+  password: string; // In a real app, this would be a hash
+  role: 'user' | 'admin';
 }

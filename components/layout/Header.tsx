@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { MedkitIcon, UserCircleIcon, MenuIcon, XMarkIcon, ShoppingCartIcon } from '../icons/Icons';
+import { MedkitIcon, UserCircleIcon, MenuIcon, XMarkIcon, ShoppingCartIcon, ArrowRightOnRectangleIcon, ArrowLeftOnRectangleIcon } from '../icons/Icons';
 import { View } from '../../App';
+import { User } from '../../types';
 
 interface HeaderProps {
   currentView: View;
   setView: (view: View) => void;
   cartItemCount: number;
   onCartClick: () => void;
+  user: User | null;
+  onLogout: () => void;
 }
 
 const NavLink: React.FC<{
@@ -33,7 +36,7 @@ const NavLink: React.FC<{
   </button>
 );
 
-const Header: React.FC<HeaderProps> = ({ currentView, setView, cartItemCount, onCartClick }) => {
+const Header: React.FC<HeaderProps> = ({ currentView, setView, cartItemCount, onCartClick, user, onLogout }) => {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -45,7 +48,16 @@ const Header: React.FC<HeaderProps> = ({ currentView, setView, cartItemCount, on
     { id: 'prescriptions', label: 'Prescriptions' },
     { id: 'products', label: 'Shop Products' },
     { id: 'ai-assistant', label: 'AI Assistant' },
+    { id: 'order-history', label: 'Order History' },
   ];
+
+  const handleLogoClick = () => {
+    if (user?.role === 'admin') {
+      setView('admin-dashboard');
+    } else {
+      setView('dashboard');
+    }
+  };
 
   return (
     <header className="bg-white/80 backdrop-blur-lg shadow-sm sticky top-0 z-40 border-b border-slate-200">
@@ -53,7 +65,7 @@ const Header: React.FC<HeaderProps> = ({ currentView, setView, cartItemCount, on
         <div className="flex justify-between items-center h-16">
           {/* Logo and Home link */}
           <div className="flex-shrink-0">
-            <button onClick={() => setView('dashboard')} className="flex items-center">
+            <button onClick={handleLogoClick} className="flex items-center">
               <MedkitIcon className="h-8 w-8 text-teal-600" />
               <span className="ml-3 text-xl font-bold text-gray-800 tracking-tight">Digital Rx</span>
             </button>
@@ -66,6 +78,16 @@ const Header: React.FC<HeaderProps> = ({ currentView, setView, cartItemCount, on
                 {item.label}
               </NavLink>
             ))}
+             {user?.role === 'admin' && (
+                <>
+                    <NavLink view="admin-dashboard" currentView={currentView} setView={setView}>
+                        Admin
+                    </NavLink>
+                    <NavLink view="inventory" currentView={currentView} setView={setView}>
+                        Inventory
+                    </NavLink>
+                </>
+            )}
           </nav>
           
           <div className="flex items-center space-x-4">
@@ -79,9 +101,24 @@ const Header: React.FC<HeaderProps> = ({ currentView, setView, cartItemCount, on
                 )}
             </button>
 
-             {/* Profile Icon */}
-            <div className="hidden md:block">
-                <UserCircleIcon className="h-8 w-8 text-gray-400 hover:text-gray-600 cursor-pointer"/>
+             {/* Profile / Logout / Login */}
+            <div className="hidden md:flex items-center">
+                {user ? (
+                    <>
+                        <span className="text-sm text-gray-600 mr-3 hidden lg:block">{user.email}</span>
+                        <button onClick={onLogout} className="text-gray-500 hover:text-red-600" title="Logout">
+                            <ArrowRightOnRectangleIcon className="h-6 w-6"/>
+                        </button>
+                    </>
+                ) : (
+                    <button 
+                        onClick={() => setView('login')}
+                        className="flex items-center px-3 py-1.5 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+                    >
+                        <ArrowLeftOnRectangleIcon className="h-5 w-5 mr-2" />
+                        Sign In
+                    </button>
+                )}
             </div>
             
             {/* Mobile Menu Button */}
@@ -114,15 +151,45 @@ const Header: React.FC<HeaderProps> = ({ currentView, setView, cartItemCount, on
                 {item.label}
               </NavLink>
             ))}
+             {user?.role === 'admin' && (
+                <>
+                    <NavLink view="admin-dashboard" currentView={currentView} setView={setView} isMobile>
+                        Admin
+                    </NavLink>
+                    <NavLink view="inventory" currentView={currentView} setView={setView} isMobile>
+                        Inventory
+                    </NavLink>
+                </>
+            )}
           </div>
            <div className="pt-4 pb-3 border-t border-gray-200">
-                <div className="flex items-center px-5">
-                    <UserCircleIcon className="h-10 w-10 text-gray-400"/>
-                    <div className="ml-3">
-                        <div className="text-base font-medium text-gray-800">User</div>
-                        <div className="text-sm font-medium text-gray-500">user@example.com</div>
+                {user ? (
+                    <>
+                        <div className="flex items-center px-5">
+                            <UserCircleIcon className="h-10 w-10 text-gray-400"/>
+                            <div className="ml-3">
+                                <div className="text-base font-medium text-gray-800">{user.email}</div>
+                            </div>
+                        </div>
+                        <div className="mt-3 px-2 space-y-1">
+                            <button
+                                onClick={onLogout}
+                                className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-100"
+                            >
+                                Sign out
+                            </button>
+                        </div>
+                    </>
+                ) : (
+                    <div className="px-2">
+                        <button
+                            onClick={() => setView('login')}
+                            className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-100"
+                        >
+                           Sign In
+                        </button>
                     </div>
-                </div>
+                )}
             </div>
         </div>
       )}

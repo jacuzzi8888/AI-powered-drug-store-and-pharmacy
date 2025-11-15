@@ -8,9 +8,10 @@ interface CartProps {
   items: CartItem[];
   onUpdateQuantity: (productId: string, quantity: number) => void;
   onRemove: (productId: string) => void;
+  onCheckout: () => void;
 }
 
-const Cart: React.FC<CartProps> = ({ isOpen, onClose, items, onUpdateQuantity, onRemove }) => {
+const Cart: React.FC<CartProps> = ({ isOpen, onClose, items, onUpdateQuantity, onRemove, onCheckout }) => {
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   return (
@@ -67,7 +68,7 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, items, onUpdateQuantity, o
                       <div className="flex items-center border border-gray-200 rounded">
                         <button onClick={() => onUpdateQuantity(item.id, item.quantity - 1)} className="p-1.5 text-gray-500 hover:text-gray-800 disabled:opacity-50" disabled={item.quantity <= 1}><MinusIcon className="h-4 w-4"/></button>
                         <span className="px-3 text-gray-700 font-medium">{item.quantity}</span>
-                        <button onClick={() => onUpdateQuantity(item.id, item.quantity + 1)} className="p-1.5 text-gray-500 hover:text-gray-800"><PlusIcon className="h-4 w-4"/></button>
+                        <button onClick={() => onUpdateQuantity(item.id, item.quantity + 1)} className="p-1.5 text-gray-500 hover:text-gray-800 disabled:opacity-50" disabled={item.quantity >= item.stock}><PlusIcon className="h-4 w-4"/></button>
                       </div>
                       <button onClick={() => onRemove(item.id)} type="button" className="font-medium text-red-600 hover:text-red-800 flex items-center">
                         <TrashIcon className="h-4 w-4 mr-1"/> Remove
@@ -89,9 +90,12 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, items, onUpdateQuantity, o
             </div>
             <p className="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
             <div className="mt-6">
-              <a href="#" className="flex items-center justify-center rounded-md border border-transparent bg-teal-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-teal-700">
+              <button
+                onClick={onCheckout}
+                className="w-full flex items-center justify-center rounded-md border border-transparent bg-teal-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-teal-700"
+              >
                 Proceed to Checkout
-              </a>
+              </button>
             </div>
           </footer>
         )}

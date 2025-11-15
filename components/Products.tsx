@@ -18,6 +18,17 @@ const StarRating: React.FC<{ rating: number, reviewCount: number }> = ({ rating,
   );
 };
 
+const StockBadge: React.FC<{ stock: number }> = ({ stock }) => {
+    if (stock <= 0) {
+        return <span className="text-xs font-bold text-red-600">Out of Stock</span>;
+    }
+    if (stock <= 10) {
+        return <span className="text-xs font-bold text-amber-600">Low Stock</span>;
+    }
+    return <span className="text-xs font-bold text-green-600">In Stock</span>;
+};
+
+
 export const ProductCard: React.FC<{ product: Product, onAddToCart: (product: Product, quantity: number) => void, onQuickView: (product: Product) => void }> = ({ product, onAddToCart, onQuickView }) => {
   const [added, setAdded] = useState(false);
 
@@ -29,7 +40,7 @@ export const ProductCard: React.FC<{ product: Product, onAddToCart: (product: Pr
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 group flex flex-col cursor-pointer" onClick={() => onQuickView(product)}>
+    <div className="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 group flex flex-col">
       <div className="relative">
         <img src={product.imageUrl} alt={product.name} className="w-full h-48 object-cover object-center" />
         <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-300 flex items-center justify-center">
@@ -47,22 +58,25 @@ export const ProductCard: React.FC<{ product: Product, onAddToCart: (product: Pr
         <p className="text-sm font-semibold text-teal-600">{product.category}</p>
         <h3 className="text-lg font-bold text-gray-800 truncate mt-1 h-7">{product.name}</h3>
         <div className="flex-grow"></div>
-        <div className="mt-2">
+        <div className="mt-2 flex justify-between items-center">
             <StarRating rating={product.rating} reviewCount={product.reviewCount} />
+            <StockBadge stock={product.stock} />
         </div>
         <div className="flex justify-between items-center mt-4">
           <p className="text-xl font-extrabold text-gray-900">${product.price.toFixed(2)}</p>
           <button
             onClick={handleAddToCart}
-            disabled={added}
+            disabled={added || product.stock <= 0}
             aria-label={`Add ${product.name} to cart`}
-            className={`px-4 py-2 text-sm font-semibold rounded-full transition-colors duration-200 flex items-center justify-center w-[110px] h-[40px] ${
+            className={`px-4 py-2 text-sm font-semibold rounded-full transition-colors duration-200 flex items-center justify-center w-[120px] h-[40px] ${
               added
                 ? 'bg-green-500 text-white'
+                : product.stock <= 0
+                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                 : 'bg-teal-600 text-white hover:bg-teal-700'
             }`}
           >
-            {added ? 'Added ✓' : (
+            {added ? 'Added ✓' : product.stock <= 0 ? 'Out of Stock' : (
               <>
                 <ShoppingCartIcon className="h-5 w-5 mr-1.5" />
                 Add
@@ -128,7 +142,7 @@ const Products: React.FC<ProductsProps> = ({ products, onAddToCart, onQuickView 
             </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10">
           {filteredProducts.map((product) => (
             <ProductCard 
               key={product.id} 
