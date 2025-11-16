@@ -20,14 +20,13 @@ const StarRating: React.FC<{ rating: number, reviewCount: number }> = ({ rating,
 
 const StockBadge: React.FC<{ stock: number }> = ({ stock }) => {
     if (stock <= 0) {
-        return <span className="text-xs font-bold text-red-600">Out of Stock</span>;
+        return <span className="text-xs font-medium text-red-700">Out of Stock</span>;
     }
     if (stock <= 10) {
-        return <span className="text-xs font-bold text-amber-600">Low Stock</span>;
+        return <span className="text-xs font-medium text-amber-700">Low Stock</span>;
     }
-    return <span className="text-xs font-bold text-green-600">In Stock</span>;
+    return <span className="text-xs font-medium text-green-700">In Stock</span>;
 };
-
 
 export const ProductCard: React.FC<{ product: Product, onAddToCart: (product: Product, quantity: number) => void, onQuickView: (product: Product) => void }> = ({ product, onAddToCart, onQuickView }) => {
   const [added, setAdded] = useState(false);
@@ -40,7 +39,7 @@ export const ProductCard: React.FC<{ product: Product, onAddToCart: (product: Pr
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 group flex flex-col">
+    <div className="bg-white rounded-2xl shadow-sm border border-stone-200/50 overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 group flex flex-col">
       <div className="relative">
         <img src={product.imageUrl} alt={product.name} className="w-full h-48 object-cover object-center" />
         <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-300 flex items-center justify-center">
@@ -54,16 +53,16 @@ export const ProductCard: React.FC<{ product: Product, onAddToCart: (product: Pr
             </button>
         </div>
       </div>
-       <div className="p-4 flex flex-col flex-grow">
-        <p className="text-sm font-semibold text-teal-600">{product.category}</p>
-        <h3 className="text-lg font-bold text-gray-800 truncate mt-1 h-7">{product.name}</h3>
+       <div className="p-5 flex flex-col flex-grow">
+        <p className="text-sm font-semibold text-[#3A7D44]">{product.category}</p>
+        <h3 className="text-lg font-lora font-bold text-[#344F1F] mt-1 h-14">{product.name}</h3>
         <div className="flex-grow"></div>
         <div className="mt-2 flex justify-between items-center">
             <StarRating rating={product.rating} reviewCount={product.reviewCount} />
             <StockBadge stock={product.stock} />
         </div>
         <div className="flex justify-between items-center mt-4">
-          <p className="text-xl font-extrabold text-gray-900">${product.price.toFixed(2)}</p>
+          <p className="text-2xl font-bold text-[#344F1F]">${product.price.toFixed(2)}</p>
           <button
             onClick={handleAddToCart}
             disabled={added || product.stock <= 0}
@@ -73,7 +72,7 @@ export const ProductCard: React.FC<{ product: Product, onAddToCart: (product: Pr
                 ? 'bg-green-500 text-white'
                 : product.stock <= 0
                 ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                : 'bg-teal-600 text-white hover:bg-teal-700'
+                : 'bg-[#F4991A] text-white hover:bg-opacity-90'
             }`}
           >
             {added ? 'Added ✓' : product.stock <= 0 ? 'Out of Stock' : (
@@ -110,19 +109,19 @@ const Products: React.FC<ProductsProps> = ({ products, onAddToCart, onQuickView 
   return (
     <>
       <div className="p-4 md:p-8 max-w-7xl mx-auto">
-        <header className="mb-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight">Explore Our Aisles</h1>
-          <p className="mt-2 text-lg text-gray-600 max-w-2xl mx-auto">Find all your everyday health and wellness essentials.</p>
+        <header className="mb-10 text-center">
+          <h1 className="text-4xl md:text-5xl font-extrabold text-[#344F1F] tracking-tight font-lora">Explore Our Aisles</h1>
+          <p className="mt-3 text-lg text-[#344F1F]/80 max-w-2xl mx-auto">Find all your everyday health and wellness essentials.</p>
         </header>
 
-        <div className="mb-8 space-y-4">
+        <div className="mb-10 space-y-4">
              <div className="max-w-xl mx-auto">
                 <input
                     type="search"
                     placeholder="Search for vitamins, pain relief, and more..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full px-5 py-3 border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 text-base"
+                    className="w-full px-5 py-3 border border-[#3A7D44]/30 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-[#F4991A] text-base"
                 />
             </div>
             <div className="flex justify-center flex-wrap gap-3">
@@ -132,8 +131,8 @@ const Products: React.FC<ProductsProps> = ({ products, onAddToCart, onQuickView 
                     onClick={() => setSelectedCategory(category)}
                     className={`px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 ${
                         selectedCategory === category
-                        ? 'bg-teal-600 text-white shadow-md'
-                        : 'bg-white text-gray-700 hover:bg-slate-100 border border-slate-200'
+                        ? 'bg-[#3A7D44] text-white shadow-md'
+                        : 'bg-[#EAF6E6] text-[#344F1F] hover:bg-white border border-[#3A7D44]/20'
                     }`}
                     >
                     {category}
@@ -142,7 +141,7 @@ const Products: React.FC<ProductsProps> = ({ products, onAddToCart, onQuickView 
             </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
           {filteredProducts.map((product) => (
             <ProductCard 
               key={product.id} 

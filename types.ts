@@ -36,11 +36,23 @@ export interface CartItem extends Product {
   quantity: number;
 }
 
+export interface ShippingAddress {
+    fullName: string;
+    addressLine1: string;
+    addressLine2?: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    country: string;
+}
+
 export interface Order {
   id: string;
   date: Date;
   items: CartItem[];
   total: number;
+  shippingAddress: ShippingAddress;
+  paymentMethod: string;
 }
 
 export interface User {

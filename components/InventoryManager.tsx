@@ -17,6 +17,16 @@ const initialFormState = {
     stock: '',
 };
 
+const FormInput: React.FC<React.InputHTMLAttributes<HTMLInputElement>> = (props) => (
+    <input {...props} className="p-2 border border-stone-300 rounded-md w-full focus:ring-2 focus:ring-[#3A7D44] focus:border-[#3A7D44] outline-none" />
+);
+const FormTextArea: React.FC<React.TextareaHTMLAttributes<HTMLTextAreaElement>> = (props) => (
+    <textarea {...props} className="p-2 border border-stone-300 rounded-md w-full focus:ring-2 focus:ring-[#3A7D44] focus:border-[#3A7D44] outline-none" />
+);
+const FormSelect: React.FC<React.SelectHTMLAttributes<HTMLSelectElement>> = (props) => (
+    <select {...props} className="p-2 border border-stone-300 rounded-md w-full focus:ring-2 focus:ring-[#3A7D44] focus:border-[#3A7D44] outline-none" />
+);
+
 const InventoryManager: React.FC<InventoryManagerProps> = ({ products, onAddProduct, onRemoveProduct }) => {
   const [newProduct, setNewProduct] = useState(initialFormState);
   const [filterCategory, setFilterCategory] = useState('All');
@@ -93,37 +103,36 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ products, onAddProd
   return (
     <div className="p-4 md:p-8 max-w-7xl mx-auto">
       <header className="mb-6 md:mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Inventory Management</h1>
-        <p className="mt-1 text-base text-gray-600">Add, remove, and manage your product stock.</p>
+        <h1 className="text-4xl font-bold font-lora text-[#344F1F]">Inventory Management</h1>
+        <p className="mt-2 text-lg text-[#344F1F]/80">Add, remove, and manage your product stock.</p>
       </header>
 
-      {/* Add Product Form */}
-      <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 mb-8">
-        <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+      <div className="bg-[#EAF6E6] p-6 rounded-lg shadow-sm border border-[#3A7D44]/20 mb-8">
+        <h2 className="text-xl font-semibold font-lora text-[#344F1F] mb-4 flex items-center">
             <PlusIcon className="h-6 w-6 mr-2" />
             Add a New Product
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <input type="text" name="name" value={newProduct.name} onChange={handleInputChange} placeholder="Product Name" className="p-2 border border-gray-300 rounded-md w-full" required />
-                <input type="number" name="price" value={newProduct.price} onChange={handleInputChange} placeholder="Price (e.g., 4.99)" step="0.01" className="p-2 border border-gray-300 rounded-md w-full" required />
+                <FormInput type="text" name="name" value={newProduct.name} onChange={handleInputChange} placeholder="Product Name" required />
+                <FormInput type="number" name="price" value={newProduct.price} onChange={handleInputChange} placeholder="Price (e.g., 4.99)" step="0.01" required />
                 <div className="space-y-2">
-                    <select name="category" value={isAddingNewCategory ? '__addNew__' : newProduct.category} onChange={handleInputChange} className="p-2 border border-gray-300 rounded-md w-full" required>
+                    <FormSelect name="category" value={isAddingNewCategory ? '__addNew__' : newProduct.category} onChange={handleInputChange} required>
                         <option value="" disabled>Select a Category</option>
                         {categories.filter(c => c !== 'All').map(c => <option key={c} value={c}>{c}</option>)}
                         <option value="__addNew__">Add New Category...</option>
-                    </select>
+                    </FormSelect>
                     {isAddingNewCategory && (
-                         <input type="text" name="category" value={newProduct.category} onChange={handleInputChange} placeholder="New Category Name" className="p-2 border border-gray-300 rounded-md w-full" required />
+                         <FormInput type="text" name="category" value={newProduct.category} onChange={handleInputChange} placeholder="New Category Name" required />
                     )}
                 </div>
-                <input type="number" name="stock" value={newProduct.stock} onChange={handleInputChange} placeholder="Stock Quantity" step="1" className="p-2 border border-gray-300 rounded-md w-full" required />
+                <FormInput type="number" name="stock" value={newProduct.stock} onChange={handleInputChange} placeholder="Stock Quantity" step="1" required />
             </div>
-            <textarea name="description" value={newProduct.description} onChange={handleInputChange} placeholder="Product Description" className="p-2 border border-gray-300 rounded-md w-full" rows={3} required />
+            <FormTextArea name="description" value={newProduct.description} onChange={handleInputChange} placeholder="Product Description" rows={3} required />
             <div className="flex items-center gap-4">
                 <div className="w-full">
-                    <label htmlFor="image-upload" className="block text-sm font-medium text-gray-700 mb-1">Product Image</label>
-                    <input id="image-upload" type="file" name="imageUrl" onChange={handleImageChange} accept="image/*" className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100" required />
+                    <label htmlFor="image-upload" className="block text-sm font-medium text-[#344F1F] mb-1">Product Image</label>
+                    <input id="image-upload" type="file" name="imageUrl" onChange={handleImageChange} accept="image/*" className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#3A7D44]/20 file:text-[#3A7D44] hover:file:bg-[#3A7D44]/30" required />
                 </div>
                 {imagePreview && (
                     <div className="flex-shrink-0">
@@ -132,26 +141,25 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ products, onAddProd
                 )}
             </div>
             <div className="flex justify-end">
-                <button type="submit" className="px-4 py-2 bg-teal-600 text-white font-semibold rounded-md shadow-sm hover:bg-teal-700">Add Product</button>
+                <button type="submit" className="px-5 py-2.5 bg-[#F4991A] text-white font-semibold rounded-full shadow-sm hover:bg-opacity-90">Add Product</button>
             </div>
         </form>
       </div>
 
-      {/* Current Inventory List */}
-      <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-        <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+      <div className="bg-[#EAF6E6] p-6 rounded-lg shadow-sm border border-[#3A7D44]/20">
+        <h2 className="text-xl font-semibold font-lora text-[#344F1F] mb-4 flex items-center">
             <ArchiveBoxIcon className="h-6 w-6 mr-2" />
             Current Inventory ({filteredProducts.length})
         </h2>
-         <div className="flex justify-start flex-wrap gap-3 mb-4 border-b pb-4">
+         <div className="flex justify-start flex-wrap gap-3 mb-4 border-b border-[#3A7D44]/20 pb-4">
             {categories.map(category => (
                 <button
                 key={category}
                 onClick={() => setFilterCategory(category)}
                 className={`px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 ${
                     filterCategory === category
-                    ? 'bg-teal-600 text-white shadow-md'
-                    : 'bg-white text-gray-700 hover:bg-slate-100 border border-slate-200'
+                    ? 'bg-[#3A7D44] text-white shadow-md'
+                    : 'bg-white text-[#344F1F] hover:bg-white/70 border border-[#3A7D44]/20'
                 }`}
                 >
                 {category}
@@ -159,8 +167,8 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ products, onAddProd
             ))}
         </div>
         <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+            <table className="min-w-full divide-y divide-[#3A7D44]/20">
+                <thead className="bg-white/50">
                     <tr>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
@@ -169,7 +177,7 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ products, onAddProd
                     <th scope="col" className="relative px-6 py-3"><span className="sr-only">Actions</span></th>
                     </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="bg-[#EAF6E6] divide-y divide-[#3A7D44]/20">
                     {filteredProducts.length > 0 ? (
                         filteredProducts.map(p => (
                              <tr key={p.id}>
@@ -179,7 +187,7 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ products, onAddProd
                                             <img className="h-10 w-10 rounded-md object-cover" src={p.imageUrl} alt={p.name} />
                                         </div>
                                         <div className="ml-4">
-                                            <div className="text-sm font-medium text-gray-900">{p.name}</div>
+                                            <div className="text-sm font-medium text-[#344F1F]">{p.name}</div>
                                         </div>
                                     </div>
                                 </td>
@@ -191,7 +199,7 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ products, onAddProd
                                     </span>
                                  </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                    <button onClick={() => handleRemove(p.id, p.name)} className="text-red-600 hover:text-red-900 flex items-center">
+                                    <button onClick={() => handleRemove(p.id, p.name)} className="text-[#F4991A] hover:text-opacity-80 flex items-center">
                                         <TrashIcon className="h-4 w-4 mr-1"/> Remove
                                     </button>
                                 </td>

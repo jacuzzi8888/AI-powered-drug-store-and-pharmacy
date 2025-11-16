@@ -72,12 +72,12 @@ const UploadModal: React.FC<{ onClose: () => void; onUpload: (file: File) => voi
           onDragLeave={handleDragLeave}
           onDragOver={handleDragOver}
           onDrop={handleDrop}
-          className={`border-2 border-dashed rounded-lg p-10 text-center transition-colors ${isDragging ? 'border-teal-500 bg-teal-50' : 'border-gray-300'}`}
+          className={`border-2 border-dashed rounded-lg p-10 text-center transition-colors ${isDragging ? 'border-[#3A7D44] bg-[#EAF6E6]' : 'border-stone-300'}`}
         >
           <UploadIcon className="mx-auto h-12 w-12 text-gray-400" />
           <p className="mt-2 text-sm text-gray-600">Drag & drop your file here</p>
           <p className="text-xs text-gray-500">or</p>
-          <label htmlFor="file-upload" className="cursor-pointer font-medium text-teal-600 hover:text-teal-500">
+          <label htmlFor="file-upload" className="cursor-pointer font-medium text-[#3A7D44] hover:text-opacity-80">
             browse to upload
           </label>
           <input id="file-upload" name="file-upload" type="file" className="sr-only" accept="image/*,.pdf" onChange={(e) => handleFileChange(e.target.files ? e.target.files[0] : null)} />
@@ -93,9 +93,9 @@ const UploadModal: React.FC<{ onClose: () => void; onUpload: (file: File) => voi
           </div>
         )}
       </div>
-      <div className="bg-gray-50 px-6 py-4 flex justify-end space-x-3">
-        <button onClick={onClose} type="button" className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50">Cancel</button>
-        <button onClick={handleSubmit} type="button" disabled={!file} className="px-4 py-2 text-sm font-medium text-white bg-teal-600 border border-transparent rounded-md shadow-sm hover:bg-teal-700 disabled:bg-gray-300">Submit for Verification</button>
+      <div className="bg-stone-50 px-6 py-4 flex justify-end space-x-3">
+        <button onClick={onClose} type="button" className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-stone-300 rounded-full shadow-sm hover:bg-stone-100">Cancel</button>
+        <button onClick={handleSubmit} type="button" disabled={!file} className="px-4 py-2 text-sm font-medium text-white bg-[#F4991A] border border-transparent rounded-full shadow-sm hover:bg-opacity-90 disabled:bg-gray-300">Submit for Verification</button>
       </div>
     </Modal>
   );
@@ -109,7 +109,7 @@ const PrescriptionDetailModal: React.FC<{ prescription: Prescription; onClose: (
                 <div className="flex items-center space-x-4">
                     <img src={prescription.fileUrl} alt="Prescription" className="h-32 w-24 object-cover rounded-lg border"/>
                     <div>
-                        <h3 className="font-bold text-lg text-gray-800">{prescription.fileName}</h3>
+                        <h3 className="font-bold text-lg text-[#344F1F]">{prescription.fileName}</h3>
                         <p className="text-sm text-gray-500">Submitted: {prescription.submittedAt.toLocaleDateString()}</p>
                         <div className="mt-2 flex items-center">
                             <Icon className={`h-5 w-5 ${textColor}`} />
@@ -121,7 +121,7 @@ const PrescriptionDetailModal: React.FC<{ prescription: Prescription; onClose: (
                 {prescription.status === PrescriptionStatus.Approved && prescription.stampJws && (
                     <div className="mt-6">
                         <h4 className="font-semibold text-gray-700">Digital Prescription Stamp (JWS)</h4>
-                        <div className="mt-2 p-3 bg-gray-100 rounded-md text-xs text-gray-600 break-all font-mono">
+                        <div className="mt-2 p-3 bg-stone-100 rounded-md text-xs text-gray-600 break-all font-mono">
                             {prescription.stampJws}
                         </div>
                          <p className="mt-2 text-xs text-gray-500">This tamper-resistant stamp verifies the authenticity of your prescription.</p>
@@ -133,55 +133,10 @@ const PrescriptionDetailModal: React.FC<{ prescription: Prescription; onClose: (
                     </div>
                 )}
             </div>
-             <div className="bg-gray-50 px-6 py-4 flex justify-end">
-                <button onClick={onClose} type="button" className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50">Close</button>
+             <div className="bg-stone-50 px-6 py-4 flex justify-end">
+                <button onClick={onClose} type="button" className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-stone-300 rounded-full shadow-sm hover:bg-stone-50">Close</button>
             </div>
         </Modal>
-    )
-}
-
-const PrescriptionCard: React.FC<{ prescription: Prescription, onSelect: (p: Prescription) => void }> = ({ prescription, onSelect }) => {
-    const { icon: Icon, badge: badgeColor } = statusStyles[prescription.status];
-    const handleRefillClick = (e: React.MouseEvent) => {
-        e.stopPropagation();
-        alert(`Refill requested for ${prescription.fileName}. You will be notified when it's ready.`);
-    };
-
-    return (
-        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-4">
-            <div className="flex justify-between items-start">
-                <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900 truncate flex items-center">
-                        <DocumentTextIcon className="h-5 w-5 text-gray-400 mr-2 flex-shrink-0" />
-                        <span className="truncate">{prescription.fileName}</span>
-                    </p>
-                    <p className="mt-1 text-sm text-gray-500">
-                        Submitted: {prescription.submittedAt.toLocaleDateString()}
-                    </p>
-                </div>
-                <button onClick={() => onSelect(prescription)} className="ml-4 text-teal-600 hover:text-teal-900 text-sm font-medium flex items-center">
-                    <EyeIcon className="h-4 w-4 mr-1" /> View
-                </button>
-            </div>
-            <div className="mt-4 pt-4 border-t border-gray-200 flex justify-between items-center">
-                <span 
-                    title={statusStyles[prescription.status].description}
-                    className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${badgeColor}`}
-                >
-                    <Icon className="h-4 w-4 mr-1.5" />
-                    {prescription.status}
-                </span>
-                {prescription.status === PrescriptionStatus.Approved && (
-                    <button 
-                        onClick={handleRefillClick} 
-                        className="text-sm font-medium text-green-600 hover:text-green-800 bg-green-50 hover:bg-green-100 px-3 py-1 rounded-full flex items-center"
-                    >
-                        <ArrowPathIcon className="h-4 w-4 mr-1.5" />
-                        Request Refill
-                    </button>
-                )}
-            </div>
-        </div>
     )
 }
 
@@ -193,8 +148,8 @@ const PrescriptionRow: React.FC<{ prescription: Prescription, onSelect: (p: Pres
   };
 
   return (
-    <tr className="bg-white hover:bg-gray-50">
-      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 flex items-center">
+    <tr className="bg-[#EAF6E6] hover:bg-white">
+      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[#344F1F] flex items-center">
         <DocumentTextIcon className="h-5 w-5 text-gray-400 mr-3" />
         {prescription.fileName}
       </td>
@@ -218,7 +173,7 @@ const PrescriptionRow: React.FC<{ prescription: Prescription, onSelect: (p: Pres
                     <ArrowPathIcon className="h-4 w-4 mr-1"/> Refill
                 </button>
             )}
-            <button onClick={() => onSelect(prescription)} className="text-teal-600 hover:text-teal-900 flex items-center text-sm">
+            <button onClick={() => onSelect(prescription)} className="text-[#3A7D44] hover:text-opacity-80 flex items-center text-sm">
                 <EyeIcon className="h-4 w-4 mr-1" /> View
             </button>
         </div>
@@ -236,7 +191,7 @@ const PrescriptionManager: React.FC<PrescriptionManagerProps> = ({ prescriptions
   }, [prescriptions]);
 
   const StatusLegend = () => (
-    <div className="bg-slate-100 p-4 rounded-lg border border-slate-200 mb-6 md:mb-8">
+    <div className="bg-white p-4 rounded-lg border border-stone-200 mb-6 md:mb-8">
         <h3 className="text-base font-semibold text-gray-700 mb-3 flex items-center">
             <InformationCircleIcon className="h-5 w-5 mr-2 text-gray-400" />
             Status Legend
@@ -264,36 +219,22 @@ const PrescriptionManager: React.FC<PrescriptionManagerProps> = ({ prescriptions
 
       <header className="flex flex-col sm:flex-row justify-between sm:items-center mb-6 md:mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">My Prescriptions</h1>
-          <p className="mt-1 text-base text-gray-600">Manage and track your prescription submissions.</p>
+          <h1 className="text-4xl font-bold font-lora text-[#344F1F]">My Prescriptions</h1>
+          <p className="mt-2 text-lg text-[#344F1F]/80">Manage and track your prescription submissions.</p>
         </div>
         <button
           onClick={() => setUploadModalOpen(true)}
-          className="mt-4 sm:mt-0 w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-teal-600 hover:bg-teal-700"
+          className="mt-4 sm:mt-0 w-full sm:w-auto inline-flex items-center justify-center px-5 py-2.5 border border-transparent text-sm font-medium rounded-full shadow-sm text-white bg-[#F4991A] hover:bg-opacity-90"
         >
           <UploadIcon className="-ml-1 mr-2 h-5 w-5" />
           Upload New Prescription
         </button>
       </header>
-
-      <StatusLegend />
       
-      {/* Mobile Card View */}
-      <div className="md:hidden">
-          {sortedPrescriptions.length > 0 ? (
-              sortedPrescriptions.map(p => <PrescriptionCard key={p.id} prescription={p} onSelect={setSelectedPrescription} />)
-          ) : (
-              <div className="text-center py-10 bg-white rounded-lg border border-gray-200">
-                  <p className="text-gray-500">No prescriptions found.</p>
-              </div>
-          )}
-      </div>
-
-      {/* Desktop Table View */}
-      <div className="hidden md:block bg-white shadow-sm rounded-lg border border-gray-200 overflow-hidden">
+      <div className="hidden md:block bg-[#EAF6E6] shadow-sm rounded-lg border border-[#3A7D44]/20 overflow-hidden">
         <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+            <table className="min-w-full divide-y divide-[#3A7D44]/20">
+                <thead className="bg-white">
                     <tr>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">File Name</th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date Submitted</th>
@@ -301,7 +242,7 @@ const PrescriptionManager: React.FC<PrescriptionManagerProps> = ({ prescriptions
                     <th scope="col" className="relative px-6 py-3"><span className="sr-only">Actions</span></th>
                     </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="bg-[#EAF6E6] divide-y divide-[#3A7D44]/20">
                     {sortedPrescriptions.length > 0 ? (
                         sortedPrescriptions.map(p => <PrescriptionRow key={p.id} prescription={p} onSelect={setSelectedPrescription} />)
                     ) : (

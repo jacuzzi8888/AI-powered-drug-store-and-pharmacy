@@ -7,13 +7,15 @@ import AiAssistant from './components/AiAssistant';
 import Products from './components/Products';
 import Cart from './components/Cart';
 import ProductDetailModal from './components/ProductDetailModal';
-import { Prescription, PrescriptionStatus, Product, CartItem, Order, User } from './types';
+import { Prescription, PrescriptionStatus, Product, CartItem, Order, User, ShippingAddress } from './types';
 import OrderHistory from './components/OrderHistory';
 import InventoryManager from './components/InventoryManager';
 import Auth from './components/Auth';
 import AdminDashboard from './components/AdminDashboard';
+import Checkout from './components/Checkout';
+import OrderConfirmation from './components/OrderConfirmation';
 
-export type View = 'dashboard' | 'prescriptions' | 'ai-assistant' | 'products' | 'order-history' | 'inventory' | 'login' | 'admin-dashboard';
+export type View = 'dashboard' | 'prescriptions' | 'ai-assistant' | 'products' | 'order-history' | 'inventory' | 'login' | 'admin-dashboard' | 'checkout' | 'order-confirmation';
 
 const defaultProducts: Product[] = [
     {
@@ -91,6 +93,7 @@ const App: React.FC = () => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [latestOrder, setLatestOrder] = useState<Order | null>(null);
   
   const [prescriptions, setPrescriptions] = useState<Prescription[]>([
     {
@@ -182,7 +185,7 @@ const App: React.FC = () => {
     const handleHashChange = () => {
         const hash = window.location.hash.replace('#', '');
         // A simple check to see if the hash corresponds to a valid view.
-        const validViews: View[] = ['dashboard', 'prescriptions', 'ai-assistant', 'products', 'order-history', 'inventory', 'login', 'admin-dashboard'];
+        const validViews: View[] = ['dashboard', 'prescriptions', 'ai-assistant', 'products', 'order-history', 'inventory', 'login', 'admin-dashboard', 'checkout', 'order-confirmation'];
         if (validViews.includes(hash as View)) {
             navigateTo(hash as View);
         } else {
@@ -333,7 +336,11 @@ const App: React.FC = () => {
 
   const handleCheckout = useCallback(() => {
     if (cart.length === 0) return;
+    setCartOpen(false);
+    navigateTo('checkout');
+  }, [cart, navigateTo]);
 
+  const handlePlaceOrder = useCallback((shippingAddress: ShippingAddress, paymentMethod: string) => {
     // 1. Deduct stock
     setProducts(currentProducts => {
         const updatedProducts = [...currentProducts];
@@ -352,7 +359,9 @@ const App: React.FC = () => {
         id: `order-${Date.now()}`,
         date: new Date(),
         items: [...cart],
-        total: subtotal
+        total: subtotal, // In a real app, add tax + shipping
+        shippingAddress,
+        paymentMethod
     };
 
     setOrders(prevOrders => {
@@ -364,12 +373,15 @@ const App: React.FC = () => {
         }
         return updatedOrders;
     });
-    
-    // 3. Clear cart
+
+    // 3. Set latest order for confirmation page and clear cart
+    setLatestOrder(newOrder);
     setCart([]);
-    setCartOpen(false);
-    alert('Checkout successful! Your order has been placed.');
-  }, [cart]);
+    
+    // 4. Navigate to confirmation page
+    navigateTo('order-confirmation');
+  }, [cart, navigateTo]);
+
 
   const cartItemCount = useMemo(() => {
     return cart.reduce((total, item) => total + item.quantity, 0);
@@ -397,6 +409,10 @@ const App: React.FC = () => {
         return <InventoryManager products={products} onAddProduct={addProduct} onRemoveProduct={removeProduct} />;
       case 'admin-dashboard':
         return <AdminDashboard setView={navigateTo} />;
+      case 'checkout':
+        return <Checkout cartItems={cart} onPlaceOrder={handlePlaceOrder} setView={navigateTo} />;
+      case 'order-confirmation':
+        return <OrderConfirmation order={latestOrder} setView={navigateTo} />;
       default:
         return <Home 
                   setView={navigateTo} 
@@ -413,7 +429,7 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50">
+    <div className="min-h-screen flex flex-col bg-[#C6EBC5]">
       <Header 
         currentView={currentView} 
         setView={navigateTo}

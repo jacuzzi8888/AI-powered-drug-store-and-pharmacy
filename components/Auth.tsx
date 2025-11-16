@@ -22,7 +22,6 @@ const Auth: React.FC<AuthProps> = ({ onLogin, onRegister }) => {
                 return;
             }
             if(onRegister(email, password)) {
-                // Switch to login view after successful registration
                 setIsLoginView(true);
                 setEmail('');
                 setPassword('');
@@ -32,20 +31,20 @@ const Auth: React.FC<AuthProps> = ({ onLogin, onRegister }) => {
     };
 
     return (
-        <div className="min-h-screen bg-slate-100 flex flex-col justify-center items-center p-4">
+        <div className="min-h-screen bg-[#C6EBC5] flex flex-col justify-center items-center p-4">
             <div className="w-full max-w-md">
                 <div className="text-center mb-8">
-                    <MedkitIcon className="h-12 w-12 text-teal-600 mx-auto" />
-                    <h1 className="mt-3 text-3xl font-extrabold text-gray-900">Digital Rx Platform</h1>
-                    <p className="mt-2 text-sm text-gray-600">
+                    <MedkitIcon className="h-12 w-12 text-[#3A7D44] mx-auto" />
+                    <h1 className="mt-3 text-4xl font-extrabold text-[#344F1F] font-lora">Digital Rx Platform</h1>
+                    <p className="mt-2 text-base text-[#344F1F]/80">
                         {isLoginView ? 'Sign in to your account' : 'Create a new account'}
                     </p>
                 </div>
 
-                <div className="bg-white p-8 rounded-2xl shadow-lg border border-slate-200">
+                <div className="bg-[#EAF6E6] p-8 rounded-2xl shadow-lg border border-[#3A7D44]/20">
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div>
-                            <label htmlFor="email" className="text-sm font-medium text-gray-700">Email address</label>
+                            <label htmlFor="email" className="text-sm font-medium text-[#344F1F]">Email address</label>
                             <input
                                 id="email"
                                 name="email"
@@ -54,12 +53,12 @@ const Auth: React.FC<AuthProps> = ({ onLogin, onRegister }) => {
                                 required
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500"
+                                className="mt-1 block w-full px-3 py-2 border border-stone-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#3A7D44] focus:border-[#3A7D44]"
                             />
                         </div>
 
                         <div>
-                            <label htmlFor="password" className="text-sm font-medium text-gray-700">Password</label>
+                            <label htmlFor="password" className="text-sm font-medium text-[#344F1F]">Password</label>
                             <input
                                 id="password"
                                 name="password"
@@ -68,13 +67,13 @@ const Auth: React.FC<AuthProps> = ({ onLogin, onRegister }) => {
                                 required
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500"
+                                className="mt-1 block w-full px-3 py-2 border border-stone-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#3A7D44] focus:border-[#3A7D44]"
                             />
                         </div>
 
                         {!isLoginView && (
                             <div>
-                                <label htmlFor="confirm-password" className="text-sm font-medium text-gray-700">Confirm Password</label>
+                                <label htmlFor="confirm-password" className="text-sm font-medium text-[#344F1F]">Confirm Password</label>
                                 <input
                                     id="confirm-password"
                                     name="confirm-password"
@@ -83,7 +82,7 @@ const Auth: React.FC<AuthProps> = ({ onLogin, onRegister }) => {
                                     required
                                     value={confirmPassword}
                                     onChange={(e) => setConfirmPassword(e.target.value)}
-                                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500"
+                                    className="mt-1 block w-full px-3 py-2 border border-stone-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#3A7D44] focus:border-[#3A7D44]"
                                 />
                             </div>
                         )}
@@ -91,7 +90,7 @@ const Auth: React.FC<AuthProps> = ({ onLogin, onRegister }) => {
                         <div>
                             <button
                                 type="submit"
-                                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
+                                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-full shadow-sm text-sm font-medium text-white bg-[#F4991A] hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#F4991A]"
                             >
                                 {isLoginView ? 'Sign In' : 'Register'}
                             </button>
@@ -101,7 +100,7 @@ const Auth: React.FC<AuthProps> = ({ onLogin, onRegister }) => {
                     <div className="mt-6 text-center">
                         <button
                             onClick={() => setIsLoginView(!isLoginView)}
-                            className="text-sm font-medium text-teal-600 hover:text-teal-500"
+                            className="text-sm font-medium text-[#3A7D44] hover:text-opacity-80"
                         >
                             {isLoginView ? "Don't have an account? Sign up" : "Already have an account? Sign in"}
                         </button>
