@@ -4,7 +4,7 @@ import { PlusIcon, TrashIcon, ArchiveBoxIcon } from './icons/Icons';
 
 interface InventoryManagerProps {
   products: Product[];
-  onAddProduct: (product: Omit<Product, 'id' | 'rating' | 'reviewCount'>) => void;
+  onAddProduct: (product: Omit<Product, 'id'>) => void;
   onRemoveProduct: (productId: string) => void;
 }
 
@@ -15,16 +15,17 @@ const initialFormState = {
     imageUrl: '',
     category: '',
     stock: '',
+    isRecommended: false,
 };
 
 const FormInput: React.FC<React.InputHTMLAttributes<HTMLInputElement>> = (props) => (
-    <input {...props} className="p-2 border border-stone-300 rounded-md w-full focus:ring-2 focus:ring-[#3A7D44] focus:border-[#3A7D44] outline-none" />
+    <input {...props} className="p-2 border border-gray-300 rounded-md w-full focus:ring-2 focus:ring-primary-teal focus:border-primary-teal outline-none" />
 );
 const FormTextArea: React.FC<React.TextareaHTMLAttributes<HTMLTextAreaElement>> = (props) => (
-    <textarea {...props} className="p-2 border border-stone-300 rounded-md w-full focus:ring-2 focus:ring-[#3A7D44] focus:border-[#3A7D44] outline-none" />
+    <textarea {...props} className="p-2 border border-gray-300 rounded-md w-full focus:ring-2 focus:ring-primary-teal focus:border-primary-teal outline-none" />
 );
 const FormSelect: React.FC<React.SelectHTMLAttributes<HTMLSelectElement>> = (props) => (
-    <select {...props} className="p-2 border border-stone-300 rounded-md w-full focus:ring-2 focus:ring-[#3A7D44] focus:border-[#3A7D44] outline-none" />
+    <select {...props} className="p-2 border border-gray-300 rounded-md w-full focus:ring-2 focus:ring-primary-teal focus:border-primary-teal outline-none" />
 );
 
 const InventoryManager: React.FC<InventoryManagerProps> = ({ products, onAddProduct, onRemoveProduct }) => {
@@ -35,8 +36,18 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ products, onAddProd
   
   const categories = useMemo(() => ['All', ...Array.from(new Set(products.map(p => p.category)))], [products]);
   
+  // FIX: Refactored to use a proper type guard for checkbox inputs.
+  // The previous implementation with destructuring `type` prevented TypeScript from correctly narrowing the event target's type.
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
+    const target = e.target;
+    
+    if (target instanceof HTMLInputElement && target.type === 'checkbox') {
+        setNewProduct(prev => ({ ...prev, [target.name]: target.checked }));
+        return;
+    }
+
+    const { name, value } = target;
+
     if (name === 'category') {
         if (value === '__addNew__') {
             setIsAddingNewCategory(true);
@@ -69,7 +80,7 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ products, onAddProd
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (Object.values(newProduct).some(val => String(val).trim() === '')) {
+    if (Object.values(newProduct).some(val => typeof val === 'string' && val.trim() === '')) {
         alert('Please fill out all fields and upload an image.');
         return;
     }
@@ -103,19 +114,19 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ products, onAddProd
   return (
     <div className="p-4 md:p-8 max-w-7xl mx-auto">
       <header className="mb-6 md:mb-8">
-        <h1 className="text-4xl font-bold font-lora text-[#344F1F]">Inventory Management</h1>
-        <p className="mt-2 text-lg text-[#344F1F]/80">Add, remove, and manage your product stock.</p>
+        <h1 className="text-4xl font-bold font-lora text-text-dark">Inventory Management</h1>
+        <p className="mt-2 text-lg text-text-medium">Add, remove, and manage your product stock.</p>
       </header>
 
-      <div className="bg-[#EAF6E6] p-6 rounded-lg shadow-sm border border-[#3A7D44]/20 mb-8">
-        <h2 className="text-xl font-semibold font-lora text-[#344F1F] mb-4 flex items-center">
+      <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 mb-8">
+        <h2 className="text-xl font-semibold font-lora text-text-dark mb-4 flex items-center">
             <PlusIcon className="h-6 w-6 mr-2" />
             Add a New Product
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormInput type="text" name="name" value={newProduct.name} onChange={handleInputChange} placeholder="Product Name" required />
-                <FormInput type="number" name="price" value={newProduct.price} onChange={handleInputChange} placeholder="Price (e.g., 4.99)" step="0.01" required />
+                <FormInput type="number" name="price" value={newProduct.price} onChange={handleInputChange} placeholder="Price (e.g., 7500)" step="1" required />
                 <div className="space-y-2">
                     <FormSelect name="category" value={isAddingNewCategory ? '__addNew__' : newProduct.category} onChange={handleInputChange} required>
                         <option value="" disabled>Select a Category</option>
@@ -131,8 +142,8 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ products, onAddProd
             <FormTextArea name="description" value={newProduct.description} onChange={handleInputChange} placeholder="Product Description" rows={3} required />
             <div className="flex items-center gap-4">
                 <div className="w-full">
-                    <label htmlFor="image-upload" className="block text-sm font-medium text-[#344F1F] mb-1">Product Image</label>
-                    <input id="image-upload" type="file" name="imageUrl" onChange={handleImageChange} accept="image/*" className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#3A7D44]/20 file:text-[#3A7D44] hover:file:bg-[#3A7D44]/30" required />
+                    <label htmlFor="image-upload" className="block text-sm font-medium text-gray-700 mb-1">Product Image</label>
+                    <input id="image-upload" type="file" name="imageUrl" onChange={handleImageChange} accept="image/*" className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-secondary-blue/20 file:text-primary-teal hover:file:bg-secondary-blue/30" required />
                 </div>
                 {imagePreview && (
                     <div className="flex-shrink-0">
@@ -140,26 +151,30 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ products, onAddProd
                     </div>
                 )}
             </div>
-            <div className="flex justify-end">
-                <button type="submit" className="px-5 py-2.5 bg-[#F4991A] text-white font-semibold rounded-full shadow-sm hover:bg-opacity-90">Add Product</button>
+             <div className="flex items-center justify-between">
+                <div className="flex items-center">
+                    <input id="isRecommended" name="isRecommended" type="checkbox" checked={newProduct.isRecommended} onChange={handleInputChange} className="h-4 w-4 text-primary-teal focus:ring-primary-teal border-gray-300 rounded" />
+                    <label htmlFor="isRecommended" className="ml-2 block text-sm text-gray-900">Pharmacist Recommended</label>
+                </div>
+                <button type="submit" className="px-5 py-2.5 bg-secondary-blue text-white font-semibold rounded-full shadow-sm hover:bg-opacity-90">Add Product</button>
             </div>
         </form>
       </div>
 
-      <div className="bg-[#EAF6E6] p-6 rounded-lg shadow-sm border border-[#3A7D44]/20">
-        <h2 className="text-xl font-semibold font-lora text-[#344F1F] mb-4 flex items-center">
+      <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+        <h2 className="text-xl font-semibold font-lora text-text-dark mb-4 flex items-center">
             <ArchiveBoxIcon className="h-6 w-6 mr-2" />
             Current Inventory ({filteredProducts.length})
         </h2>
-         <div className="flex justify-start flex-wrap gap-3 mb-4 border-b border-[#3A7D44]/20 pb-4">
+         <div className="flex justify-start flex-wrap gap-3 mb-4 border-b border-gray-200 pb-4">
             {categories.map(category => (
                 <button
                 key={category}
                 onClick={() => setFilterCategory(category)}
                 className={`px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 ${
                     filterCategory === category
-                    ? 'bg-[#3A7D44] text-white shadow-md'
-                    : 'bg-white text-[#344F1F] hover:bg-white/70 border border-[#3A7D44]/20'
+                    ? 'bg-primary-teal text-white shadow-md'
+                    : 'bg-gray-100 text-gray-800 hover:bg-gray-200 border border-transparent'
                 }`}
                 >
                 {category}
@@ -167,8 +182,8 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ products, onAddProd
             ))}
         </div>
         <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-[#3A7D44]/20">
-                <thead className="bg-white/50">
+            <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
                     <tr>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
@@ -177,7 +192,7 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ products, onAddProd
                     <th scope="col" className="relative px-6 py-3"><span className="sr-only">Actions</span></th>
                     </tr>
                 </thead>
-                <tbody className="bg-[#EAF6E6] divide-y divide-[#3A7D44]/20">
+                <tbody className="bg-white divide-y divide-gray-200">
                     {filteredProducts.length > 0 ? (
                         filteredProducts.map(p => (
                              <tr key={p.id}>
@@ -187,19 +202,19 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ products, onAddProd
                                             <img className="h-10 w-10 rounded-md object-cover" src={p.imageUrl} alt={p.name} />
                                         </div>
                                         <div className="ml-4">
-                                            <div className="text-sm font-medium text-[#344F1F]">{p.name}</div>
+                                            <div className="text-sm font-medium text-gray-900">{p.name}</div>
                                         </div>
                                     </div>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{p.category}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${p.price.toFixed(2)}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">₦{p.price.toLocaleString()}</td>
                                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <span className={`px-2 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full ${p.stock <= 0 ? 'bg-red-100 text-red-800' : p.stock <= 10 ? 'bg-amber-100 text-amber-800' : 'bg-green-100 text-green-800'}`}>
                                         {p.stock}
                                     </span>
                                  </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                    <button onClick={() => handleRemove(p.id, p.name)} className="text-[#F4991A] hover:text-opacity-80 flex items-center">
+                                    <button onClick={() => handleRemove(p.id, p.name)} className="text-red-600 hover:text-red-800 flex items-center">
                                         <TrashIcon className="h-4 w-4 mr-1"/> Remove
                                     </button>
                                 </td>

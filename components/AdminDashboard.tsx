@@ -7,31 +7,31 @@ interface AdminDashboardProps {
 }
 
 const StatCard: React.FC<{ title: string, value: string, icon: React.ElementType, description: string }> = ({ title, value, icon: Icon, description }) => (
-    <div className="bg-[#EAF6E6] p-6 rounded-lg shadow-sm border border-[#3A7D44]/20">
+    <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
         <div className="flex items-center">
-            <div className="p-3 bg-[#3A7D44]/10 rounded-full">
-                <Icon className="h-6 w-6 text-[#3A7D44]" />
+            <div className="p-3 bg-secondary-blue/20 rounded-full">
+                <Icon className="h-6 w-6 text-primary-teal" />
             </div>
             <div className="ml-4">
-                <p className="text-2xl font-bold text-[#344F1F]">{value}</p>
-                <p className="text-sm font-medium text-[#344F1F]/70">{title}</p>
+                <p className="text-2xl font-bold text-text-dark">{value}</p>
+                <p className="text-sm font-medium text-gray-500">{title}</p>
             </div>
         </div>
-        <p className="mt-4 text-sm text-[#344F1F]/80">{description}</p>
+        <p className="mt-4 text-sm text-gray-600">{description}</p>
     </div>
 );
 
 const ActionCard: React.FC<{ title: string, description: string, icon: React.ElementType, onClick: () => void; }> = ({ title, description, icon: Icon, onClick }) => (
-    <button onClick={onClick} className="bg-[#EAF6E6] p-6 rounded-lg shadow-sm hover:shadow-lg transition-shadow text-left w-full border border-[#3A7D44]/20 hover:border-[#3A7D44] group">
+    <button onClick={onClick} className="bg-white p-6 rounded-lg shadow-sm hover:shadow-lg transition-shadow text-left w-full border border-gray-200 hover:border-primary-teal group">
         <div className="flex justify-between items-start">
             <div>
-                <div className="p-3 bg-white rounded-full">
-                    <Icon className="h-7 w-7 text-[#344F1F]" />
+                <div className="p-3 bg-gray-100 rounded-full">
+                    <Icon className="h-7 w-7 text-text-dark" />
                 </div>
-                <h3 className="mt-4 text-lg font-semibold font-lora text-[#344F1F]">{title}</h3>
-                <p className="mt-1 text-sm text-[#344F1F]/80">{description}</p>
+                <h3 className="mt-4 text-lg font-semibold font-lora text-text-dark">{title}</h3>
+                <p className="mt-1 text-sm text-gray-600">{description}</p>
             </div>
-             <ArrowRightIcon className="h-6 w-6 text-gray-400 group-hover:text-[#3A7D44] transition-colors" />
+             <ArrowRightIcon className="h-6 w-6 text-gray-400 group-hover:text-primary-teal transition-colors" />
         </div>
     </button>
 );
@@ -41,15 +41,15 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ setView }) => {
   return (
     <div className="p-4 md:p-8 max-w-7xl mx-auto">
         <header className="mb-8">
-            <h1 className="text-4xl font-bold font-lora text-[#344F1F]">Admin Dashboard</h1>
-            <p className="mt-2 text-lg text-[#344F1F]/80">Overview of your pharmacy's operations.</p>
+            <h1 className="text-4xl font-bold font-lora text-text-dark">Admin Dashboard</h1>
+            <p className="mt-2 text-lg text-text-medium">Overview of your pharmacy's operations.</p>
         </header>
 
         {/* Stats Grid */}
         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
             <StatCard 
                 title="Total Revenue"
-                value="$15,890.50"
+                value="₦23,835,750"
                 icon={CurrencyDollarIcon}
                 description="+12.5% from last month"
             />
@@ -75,7 +75,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ setView }) => {
 
         {/* Quick Actions */}
          <section>
-            <h2 className="text-2xl font-bold font-lora text-[#344F1F] mb-4">Quick Actions</h2>
+            <h2 className="text-2xl font-bold font-lora text-text-dark mb-4">Quick Actions</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                  <ActionCard 
                     title="Manage Inventory"
