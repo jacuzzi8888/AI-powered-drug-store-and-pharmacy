@@ -158,5 +158,3 @@ export function useCartContext() {
     }
     return context;
 }
-
-export { CartContext };

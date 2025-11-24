@@ -147,5 +147,3 @@ export function useProductContext() {
     }
     return context;
 }
-
-export { ProductContext };

@@ -12,11 +12,16 @@ import { useCart, useAuth, useNotifications } from '../../hooks';
 import NotificationContainer from '../ui/NotificationContainer';
 
 export default function Layout() {
+    console.log('[Layout] Component rendering...');
     const [isCartOpen, setCartOpen] = useState(false);
+    console.log('[Layout] Calling useCart...');
     const { items, itemCount, updateQuantity, removeFromCart } = useCart();
+    console.log('[Layout] Calling useAuth...');
     const { user, logout } = useAuth();
+    console.log('[Layout] Calling useNotifications...');
     const { notifications, removeNotification } = useNotifications();
 
+    console.log('[Layout] Rendering layout with user:', user?.email, 'cart items:', itemCount);
     return (
         <div className="min-h-screen flex flex-col bg-background-cream">
             <NotificationContainer

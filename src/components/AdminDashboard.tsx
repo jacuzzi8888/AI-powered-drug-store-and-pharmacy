@@ -1,10 +1,6 @@
 import React from 'react';
-import { View } from '../App';
+import { useNavigate } from 'react-router-dom';
 import { ArchiveBoxIcon, ClipboardDocumentListIcon, CurrencyDollarIcon, UsersIcon, ChartBarIcon, ArrowRightIcon } from './icons/Icons';
-
-interface AdminDashboardProps {
-  setView: (view: View) => void;
-}
 
 const StatCard: React.FC<{ title: string, value: string, icon: React.ElementType, description: string }> = ({ title, value, icon: Icon, description }) => (
     <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
@@ -31,74 +27,76 @@ const ActionCard: React.FC<{ title: string, description: string, icon: React.Ele
                 <h3 className="mt-4 text-lg font-semibold font-lora text-text-dark">{title}</h3>
                 <p className="mt-1 text-sm text-gray-600">{description}</p>
             </div>
-             <ArrowRightIcon className="h-6 w-6 text-gray-400 group-hover:text-primary-teal transition-colors" />
+            <ArrowRightIcon className="h-6 w-6 text-gray-400 group-hover:text-primary-teal transition-colors" />
         </div>
     </button>
 );
 
 
-const AdminDashboard: React.FC<AdminDashboardProps> = ({ setView }) => {
-  return (
-    <div className="p-4 md:p-8 max-w-7xl mx-auto">
-        <header className="mb-8">
-            <h1 className="text-4xl font-bold font-lora text-text-dark">Admin Dashboard</h1>
-            <p className="mt-2 text-lg text-text-medium">Overview of your pharmacy's operations.</p>
-        </header>
+const AdminDashboard: React.FC = () => {
+    const navigate = useNavigate();
 
-        {/* Stats Grid */}
-        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-            <StatCard 
-                title="Total Revenue"
-                value="₦23,835,750"
-                icon={CurrencyDollarIcon}
-                description="+12.5% from last month"
-            />
-             <StatCard 
-                title="Total Orders"
-                value="1,254"
-                icon={ClipboardDocumentListIcon}
-                description="25 new orders today"
-            />
-            <StatCard 
-                title="Products in Stock"
-                value="86"
-                icon={ArchiveBoxIcon}
-                description="3 products are low stock"
-            />
-            <StatCard 
-                title="Registered Users"
-                value="342"
-                icon={UsersIcon}
-                description="+5 new users this week"
-            />
-        </section>
+    return (
+        <div className="p-4 md:p-8 max-w-7xl mx-auto">
+            <header className="mb-8">
+                <h1 className="text-4xl font-bold font-lora text-text-dark">Admin Dashboard</h1>
+                <p className="mt-2 text-lg text-text-medium">Overview of your pharmacy's operations.</p>
+            </header>
 
-        {/* Quick Actions */}
-         <section>
-            <h2 className="text-2xl font-bold font-lora text-text-dark mb-4">Quick Actions</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                 <ActionCard 
-                    title="Manage Inventory"
-                    description="Add, remove, or update products."
+            {/* Stats Grid */}
+            <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                <StatCard
+                    title="Total Revenue"
+                    value="₦23,835,750"
+                    icon={CurrencyDollarIcon}
+                    description="+12.5% from last month"
+                />
+                <StatCard
+                    title="Total Orders"
+                    value="1,254"
+                    icon={ClipboardDocumentListIcon}
+                    description="25 new orders today"
+                />
+                <StatCard
+                    title="Products in Stock"
+                    value="86"
                     icon={ArchiveBoxIcon}
-                    onClick={() => setView('inventory')}
+                    description="3 products are low stock"
                 />
-                <ActionCard 
-                    title="Manage Users"
-                    description="View and manage user roles."
+                <StatCard
+                    title="Registered Users"
+                    value="342"
                     icon={UsersIcon}
-                    onClick={() => alert('User management coming soon!')}
+                    description="+5 new users this week"
                 />
-                <ActionCard 
-                    title="View Reports"
-                    description="Analyze sales and user activity."
-                    icon={ChartBarIcon}
-                    onClick={() => alert('Reporting features coming soon!')}
-                />
-            </div>
-         </section>
-    </div>
-  );
+            </section>
+
+            {/* Quick Actions */}
+            <section>
+                <h2 className="text-2xl font-bold font-lora text-text-dark mb-4">Quick Actions</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <ActionCard
+                        title="Manage Inventory"
+                        description="Add, remove, or update products."
+                        icon={ArchiveBoxIcon}
+                        onClick={() => navigate('/admin/inventory')}
+                    />
+                    <ActionCard
+                        title="Manage Users"
+                        description="View and manage user roles."
+                        icon={UsersIcon}
+                        onClick={() => alert('User management coming soon!')}
+                    />
+                    <ActionCard
+                        title="View Reports"
+                        description="Analyze sales and user activity."
+                        icon={ChartBarIcon}
+                        onClick={() => alert('Reporting features coming soon!')}
+                    />
+                </div>
+            </section>
+        </div>
+    );
 };
 
 export default AdminDashboard;

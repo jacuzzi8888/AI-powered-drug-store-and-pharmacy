@@ -6,7 +6,14 @@ if (!API_KEY) {
   console.warn("API_KEY environment variable not set. AI Assistant will not work.");
 }
 
-const ai = new GoogleGenAI({ apiKey: API_KEY });
+// Lazy initialization - only create instance when actually used
+let ai: GoogleGenAI | null = null;
+const getAiInstance = () => {
+  if (!ai && API_KEY) {
+    ai = new GoogleGenAI({ apiKey: API_KEY });
+  }
+  return ai;
+};
 
 const systemInstruction = `You are a helpful pharmacy AI assistant for a platform called 'Digital Pharmacy'. Your primary role is to provide general information about medications (like common side effects, how to take them with food, etc.) and answer questions about over-the-counter products and general pharmacy services.
 
@@ -20,22 +27,24 @@ You have very strict limitations:
 7.  Keep your answers concise and easy to understand.`;
 
 export const getAiResponse = async (
-  prompt: string, 
+  prompt: string,
   isFirstMessage: boolean,
   onChunk: (text: string) => void
 ): Promise<void> => {
-  if (!API_KEY) {
+  const aiInstance = getAiInstance();
+
+  if (!aiInstance) {
     onChunk("The AI assistant is currently unavailable because the API key is not configured.");
     return;
   }
 
   try {
-    const responseStream = await ai.models.generateContentStream({
-        model: 'gemini-2.5-flash',
-        contents: prompt,
-        config: {
-            systemInstruction: systemInstruction,
-        }
+    const responseStream = await aiInstance.models.generateContentStream({
+      model: 'gemini-2.5-flash',
+      contents: prompt,
+      config: {
+        systemInstruction: systemInstruction,
+      }
     });
 
     for await (const chunk of responseStream) {
